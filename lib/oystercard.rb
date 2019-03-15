@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'pry'
 require_relative 'station'
 
+# allows entry to stations and manages balance and payment
 class Oystercard
-
   attr_reader :balance, :start_station, :end_station, :journeys
 
   MINIMUM_BALANCE = 1
@@ -16,7 +18,9 @@ class Oystercard
   end
 
   def topup(amount)
-    raise "Cannot topup £#{amount}: maximum balance of £#{MAXIMUM_BALANCE}" if (MAXIMUM_BALANCE - @balance) < amount
+    if amount > (MAXIMUM_BALANCE - @balance)
+      raise "Cannot topup £#{amount}: maximum balance of £#{MAXIMUM_BALANCE}"
+    end
     @balance += amount
   end
 
@@ -33,11 +37,11 @@ class Oystercard
   end
 
   def record_journey
-    @journeys << {entry: start_station, exit: end_station}
+    @journeys << { entry: start_station, exit: end_station }
   end
 
   def in_journey?
-    true if @start_station != nil
+    true unless @start_station.nil?
   end
 
   private
@@ -53,5 +57,4 @@ class Oystercard
   def deduct(amount)
     @balance -= amount
   end
-
 end
